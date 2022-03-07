@@ -1,0 +1,15 @@
+.header-controls-pics {
+  display: flex;
+  justify-content: space-between;
+  max-width: 280px;
+  margin-left: auto;
+}
+
+.header-controls-pic {
+  height: 32px;
+  width: 32px;
+  margin: 0 10px;
+  background-image: url(../../images/header-controls-sprite.png);
+  background-repeat: no-repeat;
+  cursor: pointer;
+}
