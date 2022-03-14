@@ -1,4 +1,3 @@
-/* eslint-disable no-param-reassign */
 import { createAction, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { ProductItemType } from "../types";
 import { RequestState, RequestStatus } from "./api/types";

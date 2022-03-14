@@ -1,4 +1,4 @@
-import React, { FC, useState } from "react";
+import React, { FC, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fold, selectCartItem } from "../../slices";
 import { ProductPropertiesNames, ProductType } from "../../types";
@@ -6,6 +6,7 @@ import { CountSelect } from "./CountSelect";
 import { SizeSelect } from "./SizeSelect";
 
 import "./Card.css";
+import { Message } from "../Notice";
 
 /**
  * Названия атрибутов товара
@@ -21,6 +22,11 @@ const properties: ProductPropertiesNames = {
 };
 
 /**
+ * Таймаут сообщения
+ */
+const NOTIFY_TIMEOUT = 1000;
+
+/**
  * Карточка товара
  *
  * @prop {ProductType} Данные товара
@@ -29,12 +35,19 @@ export const Card: FC<{ data: ProductType }> = ({ data }) => {
   const item = useSelector(selectCartItem(data.id));
   const [size, setSize] = useState<string>(item?.size || "");
   const [count, setCount] = useState<number>(item?.count || 1);
+  const [notify, setNotify] = useState<boolean>(false);
   const dispatch = useDispatch();
 
   const {
     id, price, title, images, sizes
   } = data;
   const [image] = images;
+
+  useEffect(() => {
+    if (notify) {
+      setTimeout(() => setNotify(false), NOTIFY_TIMEOUT);
+    }
+  }, [notify]);
 
   const handleChangeCount = (delta: number) => setCount((prevCount) => {
     const newCount = prevCount + delta;
@@ -43,7 +56,7 @@ export const Card: FC<{ data: ProductType }> = ({ data }) => {
 
   const handleClick = () => count && size && dispatch(fold({
     id, title, price, size, count
-  }));
+  })) && setNotify(true);
 
   return (
     <>
@@ -81,6 +94,9 @@ export const Card: FC<{ data: ProductType }> = ({ data }) => {
           >
             В корзину
           </button>
+          {notify && (
+            <Message message="Товар добавлен в корзину!" level="info" />
+          )}
         </div>
       </div>
     </>

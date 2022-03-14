@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   selectCatalogHasMore, loadMoreItems, selectRequestItems, RequestStatus
 } from "../../slices";
-import { Loader } from "../Notice";
+import { Error, Loader } from "../Notice";
 
 /**
  * Кнопка дозагрузки товаров
@@ -29,12 +29,15 @@ export const CatalogMore = () => {
       {(RequestStatus.PENDING === status) && (
         <Loader />
       )}
+      {(RequestStatus.FAILURE === status) && (
+        <Error />
+      )}
       <div className="text-center">
         <button
           type="button"
           className="btn btn-outline-primary mt-3"
           onClick={handleClick}
-          disabled={RequestStatus.SUCCESS !== status}
+          disabled={![RequestStatus.SUCCESS, RequestStatus.FAILURE].includes(status)}
         >
           Загрузить ещё
         </button>

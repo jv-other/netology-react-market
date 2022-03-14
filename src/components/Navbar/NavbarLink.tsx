@@ -12,7 +12,6 @@ export const NavbarLink: FC<NavLinkProps> = (props) => {
   const { to, children } = props;
   return (
     <li className={(to === location.pathname) ? "active" : undefined}>
-      {/* eslint-disable-next-line react/jsx-props-no-spreading */}
       <NavLink {...props} className="nav-link">{children}</NavLink>
     </li>
   );

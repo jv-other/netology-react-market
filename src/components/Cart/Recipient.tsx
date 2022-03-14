@@ -13,10 +13,21 @@ export const Recipient: FC<{ onApply: (recipent: RecipientType) => void }> = ({ 
     phone: "",
     address: ""
   });
-  const [agreement, setAgreement] = useState(false);
+  const [agreement, setAgreement] = useState<boolean>(false);
+  const [formValid, setFormValid] = useState<boolean>(false);
+
+  const formValidate = (
+    data: { [key: string]: any }
+  ) => !Object.values(data).filter((value) => !value).length;
 
   const handleChange = ({ target }: ChangeEvent<HTMLInputElement>) => {
     setForm((prevForm) => ({ ...prevForm, [target.name]: target.value }));
+    setFormValid(formValidate({ ...form, agreement, [target.name]: target.value }));
+  };
+
+  const handleChangeAgreement = () => {
+    setAgreement((prevValue) => !prevValue);
+    setFormValid(formValidate({ ...form, agreement: !agreement }));
   };
 
   const handleSubmit = (event: FormEvent) => {
@@ -57,7 +68,7 @@ export const Recipient: FC<{ onApply: (recipent: RecipientType) => void }> = ({ 
             className="form-check-input"
             id="agreement"
             checked={agreement}
-            onChange={() => setAgreement((prevValue) => !prevValue)}
+            onChange={handleChangeAgreement}
           />
           <label className="form-check-label" htmlFor="agreement">
             Согласен с правилами доставки
@@ -66,7 +77,7 @@ export const Recipient: FC<{ onApply: (recipent: RecipientType) => void }> = ({ 
         <button
           type="submit"
           className="btn btn-outline-secondary"
-          disabled={!agreement}
+          disabled={!formValid}
         >
           Оформить
         </button>

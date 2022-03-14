@@ -1,4 +1,4 @@
-import React, { ChangeEvent, useState } from "react";
+import React, { ChangeEvent, FormEvent, useState } from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { search } from "../../slices";
@@ -21,11 +21,15 @@ export const SearchWidget = () => {
     }
   };
 
+  const handleSubmit = (event: FormEvent) => {
+    event.preventDefault();
+    handleClick();
+  };
+
   const handleChange = ({ target }: ChangeEvent<HTMLInputElement>) => setValue(target.value);
 
   return (
     <>
-      {/* eslint-disable-next-line jsx-a11y/control-has-associated-label */}
       <div
         className="header-controls-pic header-controls-search"
         onClick={handleClick}
@@ -33,7 +37,7 @@ export const SearchWidget = () => {
         tabIndex={-1}
       />
       {visible && (
-        <form className="header-controls-search-form form-inline">
+        <form className="header-controls-search-form form-inline" onSubmit={handleSubmit}>
           <input
             className="form-control"
             placeholder="Поиск"

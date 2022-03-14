@@ -1,4 +1,4 @@
-import React, { ChangeEvent } from "react";
+import React, { ChangeEvent, FormEvent } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { selectCatalogSearch, search } from "../../slices";
 
@@ -16,8 +16,13 @@ export const Search = () => {
     { target }: ChangeEvent<HTMLInputElement>
   ) => dispatch(search(target.value));
 
+  const handleSubmit = (event: FormEvent) => {
+    event.preventDefault();
+    dispatch(search(value));
+  };
+
   return (
-    <form className="catalog-search-form form-inline">
+    <form className="catalog-search-form form-inline" onSubmit={handleSubmit}>
       <input
         className="form-control"
         placeholder="Поиск"

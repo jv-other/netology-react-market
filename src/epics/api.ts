@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import { ofType } from "redux-observable";
 import {
   catchError, concatMap, delay, filter, map, Observable, of, retryWhen, switchMap
@@ -19,6 +18,12 @@ const API_URL = process.env.REACT_APP_API_URL;
  * @constant
  */
 const RETRY_DELAY = 1000;
+
+/**
+ * Количество повторов
+ * @constant
+ */
+const RETRY_COUNT = 2;
 
 /**
  * Обработка ошибки
@@ -70,8 +75,17 @@ export const handleRequestEpic = (action$: Observable<any>) => action$.pipe(
   concatMap((req) => fromApiCall(req).pipe(
     map((response) => success(response)),
     retryWhen((errors) => errors.pipe(
+      map((e, count) => {
+        if (RETRY_COUNT < (count + 1)) {
+          throw e;
+        }
+        return errorHandler(req.resource);
+      }),
+      delay(RETRY_DELAY),
+    )),
+    catchError((e) => of(e).pipe(
       map(errorHandler(req.resource)),
-      delay(RETRY_DELAY)
+      map((err) => error(err))
     ))
   ))
 );
@@ -87,8 +101,17 @@ export const handleLoadItemsEpic = (action$: Observable<any>) => action$.pipe(
   switchMap((req) => fromApiCall(req).pipe(
     map((response) => success(response)),
     retryWhen((errors) => errors.pipe(
-      map(errorHandler(req.resource)),
+      map((e, count) => {
+        if (RETRY_COUNT < (count + 1)) {
+          throw e;
+        }
+        return errorHandler(req.resource);
+      }),
       delay(RETRY_DELAY)
+    )),
+    catchError((e) => of(e).pipe(
+      map(errorHandler(req.resource)),
+      map((err) => error(err))
     ))
   ))
 );

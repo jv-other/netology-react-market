@@ -1,4 +1,3 @@
-/* eslint-disable react/require-default-props */
 import React, { FC, ReactNode } from "react";
 
 /**
@@ -17,5 +16,10 @@ export const FooterSection: FC<{ children: ReactNode, title?: string, className?
     {children}
   </section>
 );
+
+FooterSection.defaultProps = {
+  title: undefined,
+  className: undefined
+};
 
 export default FooterSection;

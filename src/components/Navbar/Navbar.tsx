@@ -1,4 +1,3 @@
-/* eslint-disable react/require-default-props */
 import React, { FC, ReactNode } from "react";
 import { NavLink } from "react-router-dom";
 
@@ -28,5 +27,10 @@ export const Navbar: FC<{ menu?: ReactNode, controls?: ReactNode }> = ({ menu, c
     )}
   </nav>
 );
+
+Navbar.defaultProps = {
+  menu: undefined,
+  controls: undefined
+};
 
 export default Navbar;

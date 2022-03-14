@@ -27,14 +27,12 @@ export const withDataLoader = (
       if (action) {
         dispatch(action);
       }
-      // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     return (
       ((Status.PENDING === status) && (<Loader />))
       || ((Status.FAILURE === status) && (error?.statusCode === 404) && (<Navigate to="/404" replace />))
       || ((Status.FAILURE === status) && (<Error />))
-      // eslint-disable-next-line react/jsx-props-no-spreading
       || ((Status.SUCCESS === status) && (<Component {...props} data={data} />))
       || (<> </>)
     );
